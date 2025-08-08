@@ -59,4 +59,5 @@ jobs:
           else
             echo "Invalid action: ${{ github.event.inputs.action }}"
             exit 1
+          fi
 
