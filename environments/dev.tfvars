@@ -1,0 +1,10 @@
+vpc_cidr = "10.0.0.0/16"
+subnet_ids = ['subnet-abc123', 'subnet-def456', 'subnet-ghi789']
+bucket_name = "dev-bucket"
+availability_zones = ['us-west-2a', 'us-west-2b', 'us-west-2c']
+database_name = "devdb"
+master_username = "devuser"
+master_password = "devpass123"
+backup_retention_period = 5
+preferred_backup_window = "07:00-09:00"
+environment = "dev"
