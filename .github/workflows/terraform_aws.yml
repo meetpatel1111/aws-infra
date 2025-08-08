@@ -4,9 +4,23 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment to deploy (dev, test, prod)'
+        description: 'Environment to deploy'
         required: true
         default: 'dev'
+        type: choice
+        options:
+          - dev
+          - test
+          - prod
+      action:
+        description: 'Terraform action to perform'
+        required: true
+        default: 'plan'
+        type: choice
+        options:
+          - plan
+          - apply
+          - destroy
 
 jobs:
   terraform:
@@ -34,8 +48,14 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      - name: Terraform Plan
-        run: terraform plan -var-file="environments/${{ github.event.inputs.environment }}.tfvars"
-
-      - name: Terraform Apply
-        run: terraform apply -auto-approve -var-file="environments/${{ github.event.inputs.environment }}.tfvars"
+      - name: Terraform Action
+        run: |
+          if [ "${{ github.event.inputs.action }}" == "plan" ]; then
+            terraform plan -var-file="environments/${{ github.event.inputs.environment }}.tfvars"
+          elif [ "${{ github.event.inputs.action }}" == "apply" ]; then
+            terraform apply -auto-approve -var-file="environments/${{ github.event.inputs.environment }}.tfvars"
+          elif [ "${{ github.event.inputs.action }}" == "destroy" ]; then
+            terraform destroy -auto-approve -var-file="environments/${{ github.event.inputs.environment }}.tfvars"
+          else
+            echo "Invalid action: ${{ github.event.inputs.action }}"
+            exit 1
